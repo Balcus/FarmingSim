@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9543085f9b5f7a42aa74e0d3f71f32b, type: 3}
+  m_Name: Lettuce
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantName: Lettuce
+  description: Fast crop that prefers cooler spring weather.
+  seedPacketSprite: {fileID: 0}
+  growthDays: 7
+  harvestWindow: 4
+  fertilizerBoost: 0.3
+  plantMonthStart: 3
+  plantMonthEnd: 5
+  needsFullSun: 0
+  wateringEveryDays: 2
+  seedlingPrefab: {fileID: 68130768827884048, guid: 8816b233e241b1141997c395f4137040, type: 3}
+  growingPrefab: {fileID: 8905357210005546179, guid: 2eed1c72837e75f4cb35486eb9e358f1, type: 3}
+  ripePrefab: {fileID: 714701074579490590, guid: 7bd05cc74f9ecc148bc93009f0b19eb6, type: 3}
+  rottingPrefab: {fileID: 1935138569629048236, guid: 57f70990f6d967b4ea0d3662318be45c, type: 3}
+  companionPlants: []
+  funFact: Lettuce can become bitter when the weather gets too hot.

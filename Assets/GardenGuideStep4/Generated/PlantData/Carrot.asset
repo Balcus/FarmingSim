@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9543085f9b5f7a42aa74e0d3f71f32b, type: 3}
+  m_Name: Carrot
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantName: Carrot
+  description: Root crop. Good starter crop for spring.
+  seedPacketSprite: {fileID: 0}
+  growthDays: 10
+  harvestWindow: 5
+  fertilizerBoost: 0.3
+  plantMonthStart: 3
+  plantMonthEnd: 6
+  needsFullSun: 0
+  wateringEveryDays: 3
+  seedlingPrefab: {fileID: 3537613727445136826, guid: da75d8e5d2cf0664c8d630beda583f60, type: 3}
+  growingPrefab: {fileID: 8566336911847474601, guid: aaf452072006d254d9b437d23833fe93, type: 3}
+  ripePrefab: {fileID: 1996195312641600134, guid: 035d565e8265b534db18612369fde3e7, type: 3}
+  rottingPrefab: {fileID: 2649204158635010841, guid: f278244aee017354981464756f9c82eb, type: 3}
+  companionPlants: []
+  funFact: Carrot roots store sugar, which is why carrots taste sweet.
