@@ -105,6 +105,7 @@ public class GardenTile : MonoBehaviour
         SpawnModel(plant.seedlingPrefab, "Seedling");
         RefreshVisuals();
         Message("Planted " + plant.plantName + ".");
+        AudioManager.Instance?.PlayPlant();
         return true;
     }
 
@@ -161,6 +162,7 @@ public class GardenTile : MonoBehaviour
         soilQuality = Mathf.Clamp(soilQuality - 10f, 0f, 100f);
         ResetTileAfterHarvest();
         Message("Harvested " + cropName + ".");
+        AudioManager.Instance?.PlayHarvest();
         return true;
     }
 

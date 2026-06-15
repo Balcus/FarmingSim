@@ -18,10 +18,9 @@ public class PlayerMovement : MonoBehaviour
  
     bool isGrounded;
  
-    // Update is called once per frame
     void Update()
     {
-        //checking if we hit the ground to reset our falling velocity, otherwise we will fall faster the next time
+        if (PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused) return;
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
  
         if (isGrounded && velocity.y < 0)

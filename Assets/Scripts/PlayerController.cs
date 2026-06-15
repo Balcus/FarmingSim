@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (PauseMenuManager.Instance != null && PauseMenuManager.Instance.IsPaused) return;
         if (!useExistingMovement) HandleMovementFallback();
         HandleToolSwitch();
         HandleTargetUI();
