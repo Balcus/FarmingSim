@@ -2,10 +2,6 @@ using UnityEngine;
 
 public enum TileState { Unplowed, Plowed, Seeded, Growing, Harvestable, Rotting, Dead }
 
-/// <summary>
-/// Step 3.5 from the guide: one farming tile with its own state machine.
-/// Attach this to existing dirt objects or to the generated GardenTile prefab.
-/// </summary>
 public class GardenTile : MonoBehaviour
 {
     [Header("State")]
@@ -158,11 +154,33 @@ public class GardenTile : MonoBehaviour
             return false;
         }
 
-        string cropName = currentPlant != null ? currentPlant.plantName : "crop";
-        soilQuality = Mathf.Clamp(soilQuality - 10f, 0f, 100f);
+        int harvestAmount =
+            Random.Range(
+                currentPlant.minHarvestAmount,
+                currentPlant.maxHarvestAmount + 1);
+
+        string cropName = currentPlant.plantName;
+
+        InventoryManager.Instance.AddVegetable(
+            cropName,
+            harvestAmount);
+
+        soilQuality = Mathf.Clamp(
+            soilQuality - 10f,
+            0f,
+            100f);
+
         ResetTileAfterHarvest();
-        Message("Harvested " + cropName + ".");
+
+        UIManager.Instance.ShowMessage(
+            "Harvested " +
+            harvestAmount +
+            " " +
+            cropName +
+            "!");
+
         AudioManager.Instance?.PlayHarvest();
+
         return true;
     }
 

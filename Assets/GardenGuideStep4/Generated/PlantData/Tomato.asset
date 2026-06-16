@@ -28,3 +28,6 @@ MonoBehaviour:
   rottingPrefab: {fileID: 1198592541400897221, guid: a129902fcaf6cba46b2d4372fa26ebfa, type: 3}
   companionPlants: []
   funFact: Tomatoes are fruits botanically, but they are usually cooked like vegetables.
+  minHarvestAmount: 3
+  maxHarvestAmount: 9
+  sellPrice: 3

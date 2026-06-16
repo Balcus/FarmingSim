@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour
     private GameObject heldToolInstance;
     private GardenTile currentTarget;
 
+    public LayerMask npcLayer;
+
     private void Start()
     {
         cc = GetComponent<CharacterController>();
@@ -57,6 +59,7 @@ public class PlayerController : MonoBehaviour
         CreateHandRoot();
         UpdateHeldToolVisual();
         UpdateUI();
+        
     }
 
     private void Update()
@@ -69,6 +72,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)) Interact();
         if (Input.GetKeyDown(KeyCode.R)) TryRefillWater();
         if (Input.GetKeyDown(KeyCode.T)) AdvanceDayForTesting();
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            CheckSeller();
+        }
     }
 
     private void HandleMovementFallback()
@@ -274,5 +281,30 @@ public class PlayerController : MonoBehaviour
     {
         if (UIManager.Instance != null) UIManager.Instance.ShowMessage(msg);
         else Debug.Log(msg);
+    }
+
+    void CheckSeller()
+    {
+        Collider[] nearby =
+            Physics.OverlapSphere(transform.position, 3f);
+
+        Debug.Log("Found " + nearby.Length + " colliders");
+
+        foreach (Collider col in nearby)
+        {
+            Debug.Log("Hit: " + col.name);
+
+            SellerNPC seller =
+                col.GetComponent<SellerNPC>();
+
+            if (seller != null)
+            {
+                Debug.Log("Seller found!");
+                seller.SellAll();
+                return;
+            }
+        }
+
+        Debug.Log("No seller nearby");
     }
 }

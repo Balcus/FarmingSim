@@ -31,4 +31,11 @@ public class PlantData : ScriptableObject
 
     [Header("Fun Fact")]
     [TextArea] public string funFact;
+
+    [Header("Harvest")]
+    public int minHarvestAmount = 1;
+    public int maxHarvestAmount = 3;
+
+    [Header("Selling")]
+    public int sellPrice = 2;
 }

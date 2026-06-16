@@ -28,3 +28,6 @@ MonoBehaviour:
   rottingPrefab: {fileID: 2649204158635010841, guid: f278244aee017354981464756f9c82eb, type: 3}
   companionPlants: []
   funFact: Carrot roots store sugar, which is why carrots taste sweet.
+  minHarvestAmount: 5
+  maxHarvestAmount: 8
+  sellPrice: 2

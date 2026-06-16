@@ -3,9 +3,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-/// <summary>
-/// Step 3.7 from the guide. Manages the on-screen Step 4 HUD.
-/// </summary>
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
@@ -27,6 +24,14 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI seedMonths;
     public TextMeshProUGUI seedDays;
     public TextMeshProUGUI seedFunFact;
+
+    [Header("Inventory")]
+    public TextMeshProUGUI tomatoText;
+    public TextMeshProUGUI carrotText;
+    public TextMeshProUGUI lettuceText;
+
+    [Header("Money")]
+    public TextMeshProUGUI moneyText;
 
     private void Awake()
     {
@@ -116,5 +121,19 @@ public class UIManager : MonoBehaviour
         if (tool == PlayerTool.None) return "Seeds";
         if (tool == PlayerTool.WateringCan) return "Watering Can";
         return tool.ToString();
+    }
+
+    public void UpdateInventoryUI()
+    {
+        tomatoText.text = "Tomatoes: " + InventoryManager.Instance.GetAmount("Tomato");
+
+        carrotText.text = "Carrots: " + InventoryManager.Instance.GetAmount("Carrot");
+
+        lettuceText.text = "Lettuce: " + InventoryManager.Instance.GetAmount("Lettuce");
+    }
+
+    public void UpdateMoneyText(int money)
+    {
+        moneyText.text = "$ " + money;
     }
 }

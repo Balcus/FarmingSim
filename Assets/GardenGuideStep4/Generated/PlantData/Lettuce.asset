@@ -20,7 +20,7 @@ MonoBehaviour:
   fertilizerBoost: 0.3
   plantMonthStart: 3
   plantMonthEnd: 5
-  needsFullSun: 0
+  needsFullSun: 1
   wateringEveryDays: 2
   seedlingPrefab: {fileID: 68130768827884048, guid: 8816b233e241b1141997c395f4137040, type: 3}
   growingPrefab: {fileID: 8905357210005546179, guid: 2eed1c72837e75f4cb35486eb9e358f1, type: 3}
@@ -28,3 +28,6 @@ MonoBehaviour:
   rottingPrefab: {fileID: 1935138569629048236, guid: 57f70990f6d967b4ea0d3662318be45c, type: 3}
   companionPlants: []
   funFact: Lettuce can become bitter when the weather gets too hot.
+  minHarvestAmount: 1
+  maxHarvestAmount: 3
+  sellPrice: 5
