@@ -69,7 +69,7 @@ namespace FrustumCullingSpace
                 return;
             }
             
-            gameObject.SetActive(false);
+            renderer.enabled = false;
         }
 
         // enable object 
@@ -87,7 +87,7 @@ namespace FrustumCullingSpace
                 return;
             }
             
-            gameObject.SetActive(true);
+            renderer.enabled = true;
         }
 
         // changes the structure of this gameobject and builds edges to work with culling calculations
