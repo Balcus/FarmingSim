@@ -8,6 +8,12 @@ public class MoneyManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
     }
 
@@ -15,7 +21,8 @@ public class MoneyManager : MonoBehaviour
     {
         Money += amount;
 
-        UIManager.Instance.UpdateMoneyText(Money);
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateMoneyText(Money);
     }
 
     public bool SpendMoney(int amount)
@@ -25,7 +32,8 @@ public class MoneyManager : MonoBehaviour
 
         Money -= amount;
 
-        UIManager.Instance.UpdateMoneyText(Money);
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateMoneyText(Money);
 
         return true;
     }

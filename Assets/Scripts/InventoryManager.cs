@@ -32,12 +32,16 @@ public class InventoryManager : MonoBehaviour
 
     public void AddVegetable(string veggieName, int amount)
     {
+        if (string.IsNullOrEmpty(veggieName) || amount <= 0)
+            return;
+
         if (!vegetables.ContainsKey(veggieName))
             vegetables.Add(veggieName, 0);
 
         vegetables[veggieName] += amount;
 
-        UIManager.Instance.UpdateInventoryUI();
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateInventoryUI();
     }
 
     public int GetAmount(string veggieName)

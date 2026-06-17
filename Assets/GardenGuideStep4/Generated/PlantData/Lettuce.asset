@@ -23,8 +23,8 @@ MonoBehaviour:
   needsFullSun: 1
   wateringEveryDays: 2
   seedlingPrefab: {fileID: 68130768827884048, guid: 8816b233e241b1141997c395f4137040, type: 3}
-  growingPrefab: {fileID: 8905357210005546179, guid: 2eed1c72837e75f4cb35486eb9e358f1, type: 3}
-  ripePrefab: {fileID: 714701074579490590, guid: 7bd05cc74f9ecc148bc93009f0b19eb6, type: 3}
+  growingPrefab: {fileID: 8554979865545778643, guid: aec8969d0290c6d4cbc587ef85a01ce4, type: 3}
+  ripePrefab: {fileID: 6529588175851861070, guid: 46a03251388486940a04b11ee1066b29, type: 3}
   rottingPrefab: {fileID: 1935138569629048236, guid: 57f70990f6d967b4ea0d3662318be45c, type: 3}
   companionPlants: []
   funFact: Lettuce can become bitter when the weather gets too hot.

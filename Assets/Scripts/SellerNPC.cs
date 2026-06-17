@@ -8,9 +8,18 @@ public class SellerNPC : MonoBehaviour
 
     public void SellAll()
     {
-        Debug.Log("InventoryManager = " + InventoryManager.Instance);
+        if (InventoryManager.Instance == null)
+        {
+            ShowMessage("Inventory is not ready.");
+            return;
+        }
 
         var inventory = InventoryManager.Instance.GetInventory();
+        if (inventory == null)
+        {
+            ShowMessage("Inventory is empty.");
+            return;
+        }
 
         int totalMoney = 0;
 
@@ -22,33 +31,48 @@ public class SellerNPC : MonoBehaviour
             if (amount <= 0)
                 continue;
 
-            PlantData plant =
-                PlantDatabase.Instance.GetPlant(vegetable);
+            PlantData plant = PlantDatabase.Instance != null ? PlantDatabase.Instance.GetPlant(vegetable) : null;
+            if (plant == null)
+            {
+                Debug.LogWarning("SellerNPC could not find PlantData for " + vegetable);
+                continue;
+            }
 
             totalMoney += amount * plant.sellPrice;
 
             InventoryManager.Instance.ClearVegetable(vegetable);
         }
 
-        MoneyManager.Instance.AddMoney(totalMoney);
+        if (MoneyManager.Instance != null)
+            MoneyManager.Instance.AddMoney(totalMoney);
 
-        UIManager.Instance.UpdateInventoryUI();
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateInventoryUI();
 
-        UIManager.Instance.ShowMessage(
-            "Sold everything for $" + totalMoney);
+        ShowMessage("Sold everything for $" + totalMoney);
     }
 
     public void BuyPlot()
     {
+        if (plotUnlocker == null)
+        {
+            ShowMessage("Plot unlocker is not linked.");
+            return;
+        }
+
         if (plotUnlocker.UnlockNextPlot())
         {
-            UIManager.Instance.ShowMessage(
-                "New plot unlocked!");
+            ShowMessage("New plot unlocked!");
         }
         else
         {
-            UIManager.Instance.ShowMessage(
-                "Cannot unlock plot.");
+            ShowMessage("Cannot unlock plot.");
         }
+    }
+
+    private void ShowMessage(string message)
+    {
+        if (UIManager.Instance != null) UIManager.Instance.ShowMessage(message);
+        else Debug.Log(message);
     }
 }

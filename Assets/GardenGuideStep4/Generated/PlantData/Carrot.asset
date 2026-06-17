@@ -24,7 +24,7 @@ MonoBehaviour:
   wateringEveryDays: 3
   seedlingPrefab: {fileID: 3537613727445136826, guid: da75d8e5d2cf0664c8d630beda583f60, type: 3}
   growingPrefab: {fileID: 8566336911847474601, guid: aaf452072006d254d9b437d23833fe93, type: 3}
-  ripePrefab: {fileID: 1996195312641600134, guid: 035d565e8265b534db18612369fde3e7, type: 3}
+  ripePrefab: {fileID: 7584591928906036958, guid: aa925dce6c9f94b4b8818aab84246b9f, type: 3}
   rottingPrefab: {fileID: 2649204158635010841, guid: f278244aee017354981464756f9c82eb, type: 3}
   companionPlants: []
   funFact: Carrot roots store sugar, which is why carrots taste sweet.

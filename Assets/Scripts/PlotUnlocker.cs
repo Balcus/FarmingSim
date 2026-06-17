@@ -11,31 +11,48 @@ public class PlotUnlocker : MonoBehaviour
 
     public bool UnlockNextPlot()
     {
+        if (lockedPlots == null || lockedPlots.Count == 0)
+        {
+            ShowMessage("No locked plots are linked.");
+            return false;
+        }
+
         if (nextPlotIndex >= lockedPlots.Count)
         {
-            UIManager.Instance.ShowMessage(
-                "All plots have been unlocked!");
+            ShowMessage("All plots have been unlocked!");
 
+            return false;
+        }
+
+        if (MoneyManager.Instance == null)
+        {
+            ShowMessage("Money system is not ready.");
             return false;
         }
 
         if (!MoneyManager.Instance.SpendMoney(unlockCost))
         {
-            UIManager.Instance.ShowMessage(
-                "Not enough money! Need $" + unlockCost);
+            ShowMessage("Not enough money! Need $" + unlockCost);
 
             return false;
         }
 
-        lockedPlots[nextPlotIndex].SetActive(true);
+        GameObject plot = lockedPlots[nextPlotIndex];
+        if (plot != null)
+            plot.SetActive(true);
 
-        UIManager.Instance.ShowMessage(
-            "Plot unlocked for $" + unlockCost);
+        ShowMessage("Plot unlocked for $" + unlockCost);
 
         nextPlotIndex++;
 
         unlockCost += 50; // Next plot costs more
 
         return true;
+    }
+
+    private void ShowMessage(string message)
+    {
+        if (UIManager.Instance != null) UIManager.Instance.ShowMessage(message);
+        else Debug.Log(message);
     }
 }

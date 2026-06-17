@@ -154,6 +154,18 @@ public class GardenTile : MonoBehaviour
             return false;
         }
 
+        if (currentPlant == null)
+        {
+            Message("This crop is missing its plant data.");
+            return false;
+        }
+
+        if (InventoryManager.Instance == null)
+        {
+            Message("Inventory is not ready.");
+            return false;
+        }
+
         int harvestAmount =
             Random.Range(
                 currentPlant.minHarvestAmount,
@@ -172,7 +184,7 @@ public class GardenTile : MonoBehaviour
 
         ResetTileAfterHarvest();
 
-        UIManager.Instance.ShowMessage(
+        Message(
             "Harvested " +
             harvestAmount +
             " " +
@@ -269,16 +281,94 @@ public class GardenTile : MonoBehaviour
 
         if (prefab != null)
         {
-            plantModel = Instantiate(prefab, transform.position + Vector3.up * 0.12f, Quaternion.identity, transform);
-            plantModel.transform.localScale = Vector3.one * 0.35f;
+            plantModel = Instantiate(prefab, transform);
+            plantModel.name = GetPlantVisualName(fallbackName);
+            PreparePlantVisual(plantModel);
+            ConfigurePlantVisual(plantModel.transform, fallbackName);
             return;
         }
 
         plantModel = GameObject.CreatePrimitive(PrimitiveType.Cube);
         plantModel.name = "Fallback_" + fallbackName;
         plantModel.transform.SetParent(transform, false);
-        plantModel.transform.localPosition = Vector3.up * 0.18f;
-        plantModel.transform.localScale = fallbackName == "Ripe" ? new Vector3(0.35f, 0.35f, 0.35f) : new Vector3(0.2f, 0.2f, 0.2f);
+        ConfigurePlantVisual(plantModel.transform, fallbackName);
+        TintFallbackPlant(plantModel, fallbackName);
+    }
+
+    private string GetPlantVisualName(string stageName)
+    {
+        string cropName = currentPlant != null ? currentPlant.plantName : "Plant";
+        return cropName + "_" + stageName + "_Visual";
+    }
+
+    private void PreparePlantVisual(GameObject visual)
+    {
+        foreach (Rigidbody body in visual.GetComponentsInChildren<Rigidbody>())
+        {
+            body.useGravity = false;
+            body.isKinematic = true;
+            body.detectCollisions = false;
+        }
+
+        foreach (Collider plantCollider in visual.GetComponentsInChildren<Collider>())
+            plantCollider.enabled = false;
+    }
+
+    private void ConfigurePlantVisual(Transform visual, string stageName)
+    {
+        string cropName = currentPlant != null ? currentPlant.plantName.ToLowerInvariant() : "";
+        bool isSeedling = stageName == "Seedling";
+        bool isGrowing = stageName == "Growing";
+        bool isRipe = stageName == "Ripe";
+        bool isRotting = stageName == "Rotting";
+
+        Vector3 localPosition = new Vector3(0f, 0.12f, 0f);
+        Vector3 localScale = Vector3.one * 0.42f;
+        Quaternion localRotation = Quaternion.Euler(0f, GetStableYaw(), 0f);
+
+        if (cropName.Contains("tomato"))
+        {
+            localPosition = new Vector3(0f, isRipe ? 0.22f : 0.08f, 0f);
+            localScale = Vector3.one * (isSeedling ? 0.32f : isGrowing ? 0.58f : isRotting ? 0.38f : 0.78f);
+        }
+        else if (cropName.Contains("carrot"))
+        {
+            localPosition = new Vector3(0f, isRipe ? 0.18f : 0.08f, 0f);
+            localScale = Vector3.one * (isSeedling ? 0.42f : isGrowing ? 0.58f : isRotting ? 0.4f : 0.8f);
+            if (isRipe)
+                localRotation *= Quaternion.Euler(0f, 0f, -12f);
+        }
+        else if (cropName.Contains("lettuce") || cropName.Contains("cabbage"))
+        {
+            localPosition = new Vector3(0f, isRipe ? 0.14f : 0.08f, 0f);
+            localScale = Vector3.one * (isSeedling ? 0.35f : isGrowing ? 0.62f : isRotting ? 0.45f : 0.76f);
+        }
+
+        visual.localPosition = localPosition;
+        visual.localRotation = localRotation;
+        visual.localScale = localScale;
+    }
+
+    private float GetStableYaw()
+    {
+        float seed = transform.position.x * 17f + transform.position.z * 23f;
+        return Mathf.Repeat(seed, 360f);
+    }
+
+    private void TintFallbackPlant(GameObject visual, string stageName)
+    {
+        Renderer visualRenderer = visual.GetComponent<Renderer>();
+        if (visualRenderer == null) return;
+
+        string cropName = currentPlant != null ? currentPlant.plantName.ToLowerInvariant() : "";
+        Color color = Color.green;
+
+        if (stageName == "Rotting") color = new Color(0.38f, 0.25f, 0.12f);
+        else if (cropName.Contains("tomato") && stageName == "Ripe") color = new Color(0.9f, 0.08f, 0.04f);
+        else if (cropName.Contains("carrot") && stageName == "Ripe") color = new Color(1f, 0.45f, 0.05f);
+        else if (cropName.Contains("lettuce") || cropName.Contains("cabbage")) color = new Color(0.35f, 0.78f, 0.28f);
+
+        visualRenderer.material.color = color;
     }
 
     private void DestroyPlantVisual()

@@ -23,8 +23,8 @@ MonoBehaviour:
   needsFullSun: 1
   wateringEveryDays: 2
   seedlingPrefab: {fileID: 1893549770015422366, guid: 671d2fdccda8f104ca60eb2dbd239121, type: 3}
-  growingPrefab: {fileID: 5002438277930135000, guid: 1c7dbdae850404c489c203892848ae18, type: 3}
-  ripePrefab: {fileID: 972578850600012528, guid: dc245dcf76ebb2141a06f514e8316fb9, type: 3}
+  growingPrefab: {fileID: 2906742830765859135, guid: 78da2ace1ab76ce478600ebe37fa10fe, type: 3}
+  ripePrefab: {fileID: 1131810238147440353, guid: d0a8afe7d9ef50448a04cb5ad14ccac0, type: 3}
   rottingPrefab: {fileID: 1198592541400897221, guid: a129902fcaf6cba46b2d4372fa26ebfa, type: 3}
   companionPlants: []
   funFact: Tomatoes are fruits botanically, but they are usually cooked like vegetables.

@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public int wateringCanCapacity = 10;
     public int wateringCanCurrent = 10;
     public Transform waterRefillPoint;
+    public float waterRefillRange = 5f;
 
     [Header("Interaction")]
     public float interactRange = 4f;
@@ -119,6 +120,18 @@ public class PlayerController : MonoBehaviour
         GardenTile tile = RaycastTile();
         if (tile == null)
         {
+            if (IsNearWaterRefill())
+            {
+                TryRefillWater();
+                return;
+            }
+
+            if (TryGetNearbySeller(out SellerNPC seller))
+            {
+                seller.SellAll();
+                return;
+            }
+
             Message("No garden tile targeted.");
             return;
         }
@@ -192,8 +205,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        float dist = Vector3.Distance(transform.position, waterRefillPoint.position);
-        if (dist < 3.5f)
+        float dist = GetWaterRefillDistance();
+        if (dist <= waterRefillRange)
         {
             wateringCanCurrent = wateringCanCapacity;
             Message("Watering can refilled.");
@@ -205,8 +218,60 @@ public class PlayerController : MonoBehaviour
     private void FindRefillPointIfMissing()
     {
         if (waterRefillPoint != null) return;
-        GameObject refill = GameObject.Find("RefilPoint") ?? GameObject.Find("RefillPoint") ?? GameObject.Find("WaterWell");
+        GameObject refill = GameObject.Find("RefillPoint")
+                            ?? GameObject.Find("RefilPoint")
+                            ?? GameObject.Find("WaterWell")
+                            ?? FindSceneObjectByNameContains("well");
         if (refill != null) waterRefillPoint = refill.transform;
+    }
+
+    private bool IsNearWaterRefill()
+    {
+        FindRefillPointIfMissing();
+        return waterRefillPoint != null && GetWaterRefillDistance() <= waterRefillRange;
+    }
+
+    private float GetWaterRefillDistance()
+    {
+        float bestDistance = float.PositiveInfinity;
+
+        if (waterRefillPoint != null)
+            bestDistance = Mathf.Min(bestDistance, DistanceToTransformOrColliders(waterRefillPoint));
+
+        GameObject well = GameObject.Find("WaterWell");
+        if (well != null && well.transform != waterRefillPoint)
+            bestDistance = Mathf.Min(bestDistance, DistanceToTransformOrColliders(well.transform));
+
+        return bestDistance;
+    }
+
+    private float DistanceToTransformOrColliders(Transform target)
+    {
+        if (target == null) return float.PositiveInfinity;
+
+        float bestDistance = Vector3.Distance(transform.position, target.position);
+        Collider[] colliders = target.GetComponentsInChildren<Collider>(true);
+        foreach (Collider col in colliders)
+        {
+            if (col == null || !col.enabled) continue;
+            Vector3 closestPoint = col.ClosestPoint(transform.position);
+            bestDistance = Mathf.Min(bestDistance, Vector3.Distance(transform.position, closestPoint));
+        }
+
+        return bestDistance;
+    }
+
+    private GameObject FindSceneObjectByNameContains(string value)
+    {
+        Transform[] transforms = Resources.FindObjectsOfTypeAll<Transform>();
+        foreach (Transform candidate in transforms)
+        {
+            if (candidate == null || !candidate.gameObject.scene.IsValid()) continue;
+            if (candidate.name.IndexOf(value, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                return candidate.gameObject;
+        }
+
+        return null;
     }
 
     private void AdvanceDayForTesting()
@@ -224,8 +289,8 @@ public class PlayerController : MonoBehaviour
 
         GameObject root = new GameObject("GG_Step4_HandRoot");
         root.transform.SetParent(playerCamera.transform, false);
-        root.transform.localPosition = new Vector3(0.48f, -0.42f, 0.72f);
-        root.transform.localRotation = Quaternion.Euler(12f, -28f, 0f);
+        root.transform.localPosition = new Vector3(0.36f, -0.32f, 0.58f);
+        root.transform.localRotation = Quaternion.Euler(10f, -18f, 8f);
         root.transform.localScale = Vector3.one;
         handRoot = root.transform;
     }
@@ -241,7 +306,7 @@ public class PlayerController : MonoBehaviour
             heldToolInstance = Instantiate(prefab, handRoot);
             heldToolInstance.transform.localPosition = Vector3.zero;
             heldToolInstance.transform.localRotation = Quaternion.identity;
-            heldToolInstance.transform.localScale = Vector3.one * 0.6f;
+            heldToolInstance.transform.localScale = Vector3.one * GetHeldToolScale();
         }
         else
         {
@@ -259,6 +324,23 @@ public class PlayerController : MonoBehaviour
             case PlayerTool.Fertilizer: return fertilizerPrefab;
             case PlayerTool.Harvest: return harvestPrefab;
             default: return seedPouchPrefab;
+        }
+    }
+
+    private float GetHeldToolScale()
+    {
+        switch (currentTool)
+        {
+            case PlayerTool.Plow:
+            case PlayerTool.Harvest:
+                return 0.18f;
+            case PlayerTool.WateringCan:
+                return 0.3f;
+            case PlayerTool.Insecticide:
+            case PlayerTool.Fertilizer:
+                return 0.28f;
+            default:
+                return 0.25f;
         }
     }
 
@@ -287,47 +369,41 @@ public class PlayerController : MonoBehaviour
         else Debug.Log(msg);
     }
 
+    private bool TryGetNearbySeller(out SellerNPC seller)
+    {
+        seller = null;
+        float range = Mathf.Max(interactRange, 4f);
+        Collider[] nearby = Physics.OverlapSphere(transform.position, range);
+        foreach (Collider col in nearby)
+        {
+            seller = col.GetComponentInParent<SellerNPC>();
+            if (seller == null) seller = col.GetComponentInChildren<SellerNPC>();
+            if (seller != null)
+                return true;
+        }
+
+        return false;
+    }
+
     void CheckSeller()
     {
-        Collider[] nearby =
-            Physics.OverlapSphere(transform.position, 3f);
-
-        Debug.Log("Found " + nearby.Length + " colliders");
-
-        foreach (Collider col in nearby)
+        if (TryGetNearbySeller(out SellerNPC seller))
         {
-            Debug.Log("Hit: " + col.name);
-
-            SellerNPC seller =
-                col.GetComponent<SellerNPC>();
-
-            if (seller != null)
-            {
-                Debug.Log("Seller found!");
-                seller.SellAll();
-                return;
-            }
+            seller.SellAll();
+            return;
         }
 
-        Debug.Log("No seller nearby");
+        Message("No seller nearby.");
     }
+
     void BuyPlotFromSeller()
     {
-        Collider[] nearby =
-            Physics.OverlapSphere(transform.position, 3f);
-
-        foreach (Collider col in nearby)
+        if (TryGetNearbySeller(out SellerNPC seller))
         {
-            SellerNPC seller =
-                col.GetComponent<SellerNPC>();
-
-            if (seller != null)
-            {
-                seller.BuyPlot();
-                return;
-            }
+            seller.BuyPlot();
+            return;
         }
 
-        Debug.Log("No seller nearby");
+        Message("No seller nearby.");
     }
 }

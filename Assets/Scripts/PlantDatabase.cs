@@ -14,12 +14,19 @@ public class PlantDatabase : MonoBehaviour
     {
         Instance = this;
 
+        if (plants == null) return;
+
         foreach (PlantData plant in plants)
-            lookup.Add(plant.plantName, plant);
+        {
+            if (plant == null || string.IsNullOrEmpty(plant.plantName)) continue;
+            lookup[plant.plantName] = plant;
+        }
     }
 
     public PlantData GetPlant(string name)
     {
-        return lookup[name];
+        if (string.IsNullOrEmpty(name)) return null;
+        lookup.TryGetValue(name, out PlantData plant);
+        return plant;
     }
 }
