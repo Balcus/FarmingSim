@@ -138,3 +138,19 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Large archives / generated files
+*.zip
+FarmingSim.zip
+FarmingSim_unityProject.zip
+Assets/Old Water Well/Textures/All_source_textures.psd
+
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+.vs/
