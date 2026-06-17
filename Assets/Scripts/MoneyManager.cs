@@ -17,4 +17,16 @@ public class MoneyManager : MonoBehaviour
 
         UIManager.Instance.UpdateMoneyText(Money);
     }
+
+    public bool SpendMoney(int amount)
+    {
+        if (Money < amount)
+            return false;
+
+        Money -= amount;
+
+        UIManager.Instance.UpdateMoneyText(Money);
+
+        return true;
+    }
 }

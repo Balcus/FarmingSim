@@ -4,12 +4,13 @@ using System.Collections.Generic;
 public class SellerNPC : MonoBehaviour
 {
     public float interactDistance = 3f;
+    public PlotUnlocker plotUnlocker;
 
     public void SellAll()
     {
         Debug.Log("InventoryManager = " + InventoryManager.Instance);
-        var inventory =
-            InventoryManager.Instance.GetInventory();
+
+        var inventory = InventoryManager.Instance.GetInventory();
 
         int totalMoney = 0;
 
@@ -34,7 +35,20 @@ public class SellerNPC : MonoBehaviour
         UIManager.Instance.UpdateInventoryUI();
 
         UIManager.Instance.ShowMessage(
-            "Sold everything for $" +
-            totalMoney);
+            "Sold everything for $" + totalMoney);
+    }
+
+    public void BuyPlot()
+    {
+        if (plotUnlocker.UnlockNextPlot())
+        {
+            UIManager.Instance.ShowMessage(
+                "New plot unlocked!");
+        }
+        else
+        {
+            UIManager.Instance.ShowMessage(
+                "Cannot unlock plot.");
+        }
     }
 }

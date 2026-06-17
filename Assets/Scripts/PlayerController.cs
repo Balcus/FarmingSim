@@ -76,6 +76,10 @@ public class PlayerController : MonoBehaviour
         {
             CheckSeller();
         }
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            BuyPlotFromSeller();
+        }
     }
 
     private void HandleMovementFallback()
@@ -301,6 +305,25 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("Seller found!");
                 seller.SellAll();
+                return;
+            }
+        }
+
+        Debug.Log("No seller nearby");
+    }
+    void BuyPlotFromSeller()
+    {
+        Collider[] nearby =
+            Physics.OverlapSphere(transform.position, 3f);
+
+        foreach (Collider col in nearby)
+        {
+            SellerNPC seller =
+                col.GetComponent<SellerNPC>();
+
+            if (seller != null)
+            {
+                seller.BuyPlot();
                 return;
             }
         }
